@@ -1,0 +1,23 @@
+public class NumberOfAccounts {
+    public static void updateAccountsWithContactCount() {
+        // Get a list of all accounts
+        List<Account> accounts = [SELECT Id FROM Account];
+
+        // Create a map to store the number of contacts for each account
+        Map<Id, Integer> contactCountMap = new Map<Id, Integer>();
+
+        // Loop through the list of accounts and get the number of contacts for each account
+        for (Account a : accounts) {
+            Integer contactCount = [SELECT COUNT() FROM Contact WHERE AccountId = :a.Id];
+            contactCountMap.put(a.Id, contactCount);
+        }
+
+        // Update the accounts with the number of contacts
+        for (Account a : accounts) {
+            a.Number_of_Contacts__c = contactCountMap.get(a.Id);
+        }
+
+        // Save the updated accounts
+        update accounts;
+    }
+}
